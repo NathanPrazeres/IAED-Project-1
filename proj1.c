@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <string.h>
 
+int n_aero=0, n_voos=0;
+
 typedef struct {
     int dia;
     int mes;
@@ -23,6 +25,8 @@ typedef struct {
     int voos;
 } AP;
 
+AP aps[40];
+
 typedef struct {
     char codigo[7];
     char idp[4];
@@ -33,7 +37,7 @@ typedef struct {
     int capacidade;
 } Voo;
 
-
+Voo voos[30000];
 
 int comparaDatas(Data d1, Data d2)
 {
@@ -110,7 +114,7 @@ void sortAP(AP aps[], int n_aero)
 
 
 
-int a(AP aps[], int n_aero)
+void a()
 {
     AP aeroporto;
     int i, flag = 1;
@@ -138,7 +142,6 @@ int a(AP aps[], int n_aero)
         else
             printf("invalid airport ID\n");
     }
-    return n_aero;
 }
 
 
@@ -148,7 +151,7 @@ void printAP(AP a)
 }
 
 
-void l(AP aps[], int n_aero)
+void l()
 {
     int i, flag = 1, err = 1;
     char id[4], c = getchar();
@@ -169,7 +172,7 @@ void l(AP aps[], int n_aero)
         for (i = 0; i < n_aero; i++)
             printAP(aps[i]);
     else if (err)
-        printf("<IDAeroporto>: no such airport ID\n");
+        printf("%s: no such airport ID\n", id);
 }
 
 
@@ -194,7 +197,7 @@ void printVoo(Voo voo)
 
 
 
-int v(Voo voos[], int n_voos, AP aps[], int n_aero)
+void v()
 {
     int i, flag = 0, temp_flag;
     char c = getchar();
@@ -263,8 +266,6 @@ int v(Voo voos[], int n_voos, AP aps[], int n_aero)
     else 
         for (i = 0; i < n_voos; i++)
             printVoo(voos[i]);
-
-    return n_voos;
 }
 
 
@@ -287,21 +288,18 @@ void t()
 
 int main()
 {
-    AP aps[40];
-    Voo voos[30000];
-    int n_aero=0, n_voos=0;
     char c;
 
     while ((c = getchar()) != 'q') {
         switch (c) {
             case 'a':
-                n_aero = a(aps, n_aero);
+                a();
                 break;
             case 'l':
-                l(aps, n_aero);
+                l();
                 break;
             case 'v':
-                n_voos = v(voos, n_voos, aps, n_aero);
+                v();
                 break;
             case 'p':
                 printf("p");
