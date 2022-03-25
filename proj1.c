@@ -111,15 +111,30 @@ void sortAP(AP aps[], int n_aero)
 }
 
 
-
-
-
-void sortVoo(Voo voos[], int n_voos)
+void sortVoo1()
 {
     Voo temp;
     int i, j;
-    for (i = 0; i < n_voos-1; i++) {
-        for (j = i+1; j < n_voos; j++) {
+    for (i = 0; i < n_voos - 1; i++) {
+        for (j = i + 1; j < n_voos; j++) {
+            if (voos[i].horap.horas > voos[j].horap.horas || \
+            (voos[i].horap.horas == voos[j].horap.horas && \
+            voos[i].horap.minutos > voos[j].horap.minutos)) {
+                temp = voos[i];
+                voos[i] = voos[j];
+                voos[j] = temp;
+            }
+        }
+    }
+}
+
+
+void sortVoo2()
+{
+    Voo temp;
+    int i, j;
+    for (i = 0; i < n_voos - 1; i++) {
+        for (j = i + 1; j < n_voos; j++) {
             if ((voos[i].datap.ano > voos[j].datap.ano) || \
             (voos[i].datap.ano == voos[j].datap.ano && \
             voos[i].datap.mes > voos[j].datap.mes) || \
@@ -132,6 +147,13 @@ void sortVoo(Voo voos[], int n_voos)
             }
         }
     }
+}
+
+
+void sortVoo()
+{
+    sortVoo1();
+    sortVoo2();
 }
 
 
@@ -383,26 +405,19 @@ void t()
 
 void p()
 {
-    Data dataNova;
-    Hora horaNova;
     int i, flag = 1;
     char id[4];
 
     scanf("%s", id);
-    sortVoo(voos, n_voos);
+    sortVoo();
 
     for (i = 0; i < n_voos; i++) {
-        if (voos[i].idp == id) {
+        if (!strcmp(voos[i].idp, id)) {
             flag = 0;
 
-            dataNova.dia = voos[i].datap.dia + 
-            dataChegada(voos[i].horap, voos[i].duracao);
-
-            horaNova = horaChegada(voos[i].horap, voos[i].duracao);
-
-            printf("%s %s %d-%d-%d %d:%d\n", voos[i].codigo, voos[i].idp, \
-            dataNova.dia, voos[i].datap.mes, \
-            voos[i].datap.ano, horaNova.minutos, horaNova.horas);
+            printf("%s %s %02d-%02d-%04d %02d:%02d\n", voos[i].codigo, \
+            voos[i].idp, voos[i].datap.dia, voos[i].datap.mes, \
+            voos[i].datap.ano, voos[i].horap.horas, voos[i].horap.minutos);
         }
     }
 
@@ -419,10 +434,10 @@ void c()
     char id[4];
 
     scanf("%s", id);
-    sortVoo(voos, n_voos);
+    sortVoo();
 
     for (i = 0; i < n_voos; i++) {
-        if (voos[i].idp == id) {
+        if (!strcmp(voos[i].idc, id)) {
             flag = 0;
 
             if (dataChegada(voos[i].horap, voos[i].duracao))
@@ -430,9 +445,9 @@ void c()
 
             horaNova = horaChegada(voos[i].horap, voos[i].duracao);
 
-            printf("%s %s %d-%d-%d %d:%d\n", voos[i].codigo, voos[i].idc, \
-            dataNova.dia, dataNova.mes, dataNova.ano, horaNova.minutos, \
-            horaNova.horas);
+            printf("%s %s %02d-%02d-%04d %02d:%02d\n", voos[i].codigo, \
+            voos[i].idc, dataNova.dia, dataNova.mes, dataNova.ano, \
+            horaNova.minutos, horaNova.horas);
         }
     }
 
