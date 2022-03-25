@@ -46,10 +46,17 @@ int testeData(int dia, int mes, int ano)
 {
     int flag = 1;
 
+    if (ano > data.ano) {
+        if (mes > data.mes)
+            flag = 0;
+        else if (mes == data.mes && dia > data.dia)
+            flag = 0;
+    }
+
     if (ano < data.ano || (mes < data.mes && ano == data.ano) || \
-    (dia < data.dia && mes == data.mes && ano == data.mes) || \
-    ano > 2023 || mes > 12)
+    (dia < data.dia && mes == data.mes && ano == data.mes) || mes > 12)
         flag = 0;
+
     switch (mes) {
         case 1:
         case 3:
@@ -83,8 +90,8 @@ void sortAP(AP aps[], int n_aero)
 {
     AP temp;
     int i, j;
-    for (i = 0; i < n_aero-1; i++) {
-        for (j = i+1; j < n_aero; j++) {
+    for (i = 0; i < n_aero - 1; i++) {
+        for (j = i + 1; j < n_aero; j++) {
             if (strcmp(aps[i].id, aps[j].id) > 0) {
                 temp = aps[i];
                 aps[i] = aps[j];
@@ -98,25 +105,6 @@ void sortAP(AP aps[], int n_aero)
 
 
 
-void sortVoo(Voo voos[], int n_voos)
-{
-    Voo temp;
-    int i, j;
-    for (i = 0; i < n_voos-1; i++) {
-        for (j = i+1; j < n_voos; j++) {
-            if ((voos[i].datap.ano > voos[j].datap.ano) || \
-            (voos[i].datap.ano == voos[j].datap.ano && \
-            voos[i].datap.mes > voos[j].datap.mes) || \
-            (voos[i].datap.ano == voos[j].datap.ano && \
-            voos[i].datap.mes == voos[j].datap.mes && \
-            voos[i].datap.dia > voos[j].datap.dia)) {
-                temp = voos[i];
-                voos[i] = voos[j];
-                voos[j] = temp;
-            }
-        }
-    }
-}
 
 
 
@@ -129,7 +117,7 @@ int a(AP aps[], int n_aero)
  
 
 
-    if (n_aero > 40)
+    if (n_aero >= 40)
         printf("too many airports\n");
     else {
         scanf("%s %s %[^\n]", aeroporto.id, aeroporto.pais, aeroporto.cidade);
@@ -218,7 +206,8 @@ int v(Voo voos[], int n_voos, AP aps[], int n_aero)
         if (voo.capacidade < 10 || voo.capacidade > 100)
             flag = 8;
 
-        if (voo.duracao.horas >= 12)
+        if (voo.duracao.horas > 12 || \
+        (voo.duracao.horas == 12 && voo.duracao.minutos > 0))
             flag = 7;
 
         if (testeData(voo.datap.dia, voo.datap.mes, voo.datap.ano) == 0)
