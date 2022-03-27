@@ -39,6 +39,83 @@ typedef struct {
 
 Voo voos[30000];
 
+
+
+void sortAP()
+{
+    AP temp;
+    int i, j, flag;
+    for (i = 0; i < n_aero; i++) {
+        flag = 1;
+        for (j = 0; j < n_aero - 1; j++) {
+            if (strcmp(aps[j].id, aps[j + 1].id) > 0) {
+                flag = 0;
+                temp = aps[j];
+                aps[j] = aps[j + 1];
+                aps[j + 1] = temp;
+            }
+        }
+        if (flag)
+            break;
+    }
+}
+
+
+void sortVooHora(Voo v[])
+{
+    Voo temp;
+    int i, j, flag;
+    for (i = 0; i < n_voos; i++) {
+        flag = 1;
+        for (j = 0; j < n_voos - 1; j++) {
+            if (v[j].horap.horas > v[j + 1].horap.horas || \
+            (v[j].horap.horas == v[j + 1].horap.horas && \
+            v[j].horap.minutos > v[j + 1].horap.minutos)) {
+                flag = 0;
+                temp = v[j];
+                v[j] = v[j + 1];
+                v[j + 1] = temp;
+            }
+        }
+        if (flag)
+            break;
+    }
+}
+
+
+void sortVooData(Voo v[])
+{
+    Voo temp;
+    int i, j, flag;
+    for (i = 0; i < n_voos ; i++) {
+        flag = 1;
+        for (j = 0; j < n_voos - 1; j++) {
+            if (v[j].datap.ano > v[j + 1].datap.ano || \
+            (v[j].datap.ano == v[j + 1].datap.ano && \
+            v[j].datap.mes > v[j + 1].datap.mes) || \
+            (v[j].datap.ano == v[j + 1].datap.ano && \
+            v[j].datap.mes == v[j + 1].datap.mes && \
+            v[j].datap.dia > v[j + 1].datap.dia)) {
+                flag = 0;
+                temp = v[j];
+                v[j] = v[j + 1];
+                v[j + 1] = temp;
+            }
+        }
+        if (flag)
+            break;
+    }
+}
+
+
+void sortVoo(Voo v[])
+{
+    sortVooHora(v);
+    sortVooData(v);
+}
+
+
+
 int comparaDatas(Data d1, Data d2)
 {
     return (d1.dia == d2.dia && d1.mes == d2.mes && d1.ano == d2.ano)? 1:0;
@@ -85,7 +162,7 @@ int testeData(int dia, int mes, int ano)
     }
 
     if (ano < data.ano || (mes < data.mes && ano == data.ano) || \
-    (dia < data.dia && mes == data.mes && ano == data.mes) || mes > 12)
+    (dia < data.dia && mes == data.mes && ano == data.ano) || mes > 12)
         flag = 0;
 
     flag = testeMes(dia, mes, flag);
@@ -94,71 +171,7 @@ int testeData(int dia, int mes, int ano)
 }
 
 
-
-void sortAP(AP aps[], int n_aero)
-{
-    AP temp;
-    int i, j;
-    for (i = 0; i < n_aero - 1; i++) {
-        for (j = i + 1; j < n_aero; j++) {
-            if (strcmp(aps[i].id, aps[j].id) > 0) {
-                temp = aps[i];
-                aps[i] = aps[j];
-                aps[j] = temp;
-            }
-        }
-    }
-}
-
-
-void sortVoo1()
-{
-    Voo temp;
-    int i, j;
-    for (i = 0; i < n_voos - 1; i++) {
-        for (j = i + 1; j < n_voos; j++) {
-            if (voos[i].horap.horas > voos[j].horap.horas || \
-            (voos[i].horap.horas == voos[j].horap.horas && \
-            voos[i].horap.minutos > voos[j].horap.minutos)) {
-                temp = voos[i];
-                voos[i] = voos[j];
-                voos[j] = temp;
-            }
-        }
-    }
-}
-
-
-void sortVoo2()
-{
-    Voo temp;
-    int i, j;
-    for (i = 0; i < n_voos - 1; i++) {
-        for (j = i + 1; j < n_voos; j++) {
-            if ((voos[i].datap.ano > voos[j].datap.ano) || \
-            (voos[i].datap.ano == voos[j].datap.ano && \
-            voos[i].datap.mes > voos[j].datap.mes) || \
-            (voos[i].datap.ano == voos[j].datap.ano && \
-            voos[i].datap.mes == voos[j].datap.mes && \
-            voos[i].datap.dia > voos[j].datap.dia)) {
-                temp = voos[i];
-                voos[i] = voos[j];
-                voos[j] = temp;
-            }
-        }
-    }
-}
-
-
-void sortVoo()
-{
-    sortVoo1();
-    sortVoo2();
-}
-
-
-
-int dataChegada(Hora partida, Hora duracao)
+int passaDia(Hora partida, Hora duracao)
 {
     int somaMinutos = partida.minutos + duracao.minutos, \
     somaHoras = partida.horas + duracao.horas, day = 0;
@@ -180,10 +193,10 @@ int dataChegada(Hora partida, Hora duracao)
 
 Data somaDia(Data dataPartida)
 {
-    Data dataNova = {0, 0, 0};
+    Data dataNova = {0};
     int flag = 1;
 
-    flag = testeMes(dataPartida.dia, dataPartida.mes, flag);
+    flag = testeMes(dataPartida.dia + 1, dataPartida.mes, flag);
 
     if (dataPartida.mes == 12 && flag == 0)
         flag = 2;
@@ -237,18 +250,19 @@ void a()
     AP aeroporto;
     int i, flag = 1;
  
-
-
     if (n_aero >= 40)
         printf("too many airports\n");
     else {
         scanf("%s %s %[^\n]", aeroporto.id, aeroporto.pais, aeroporto.cidade);
         aeroporto.voos = 0;
+
         if (isupper(aeroporto.id[0]) && isupper(aeroporto.id[1]) && \
         isupper(aeroporto.id[2])) {
+
             for (i = 0; i < n_aero; i++)
                 if (strcmp(aps[i].id, aeroporto.id) == 0)
                     flag = 0;
+                    
             if (flag) {
                 printf("airport %s\n", aeroporto.id);
                 aps[n_aero] = aeroporto;
@@ -274,23 +288,23 @@ void l()
     int i, flag = 1, err = 1;
     char id[4], c = getchar();
 
-    sortAP(aps, n_aero);
+    sortAP();
     while (c != '\n' && c != '\0') {
-        flag = 0;
+        flag = err = 0;
         scanf("%s", id);
         for (i = 0; i < n_aero; i++) {
             if (!strcmp(aps[i].id, id)) {
                 printAP(aps[i]);
-                err = 0;
+                err = 1;
             }
         }
+        if (!err)
+            printf("%s: no such airport ID\n", id);
         c = getchar();
     }
     if (flag)
         for (i = 0; i < n_aero; i++)
             printAP(aps[i]);
-    else if (err)
-        printf("%s: no such airport ID\n", id);
 }
 
 
@@ -331,8 +345,9 @@ void v()
         (voo.duracao.horas == 12 && voo.duracao.minutos > 0))
             flag = 7;
 
-        if (testeData(voo.datap.dia, voo.datap.mes, voo.datap.ano) == 0)
+        if (testeData(voo.datap.dia, voo.datap.mes, voo.datap.ano) == 0) {
             flag = 6;
+        }
 
         if (n_voos >= 30000)
             flag = 5;
@@ -407,52 +422,75 @@ void p()
 {
     int i, flag = 1;
     char id[4];
+    Voo copiaVoos[40];
+
+    for (i = 0; i < n_voos; i++)
+        copiaVoos[i] = voos[i];
 
     scanf("%s", id);
-    sortVoo();
 
-    for (i = 0; i < n_voos; i++) {
-        if (!strcmp(voos[i].idp, id)) {
+    for (i = 0; i < n_aero; i++) {
+        if (!strcmp(aps[i].id, id))
             flag = 0;
-
-            printf("%s %s %02d-%02d-%04d %02d:%02d\n", voos[i].codigo, \
-            voos[i].idp, voos[i].datap.dia, voos[i].datap.mes, \
-            voos[i].datap.ano, voos[i].horap.horas, voos[i].horap.minutos);
-        }
     }
 
     if (flag)
         printf("%s: no such airport ID\n", id);
+    else {
+        sortVoo(copiaVoos);
+
+        for (i = 0; i < n_voos; i++) {
+            if (!strcmp(copiaVoos[i].idp, id)) {
+                printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
+                copiaVoos[i].idc, copiaVoos[i].datap.dia, 
+                copiaVoos[i].datap.mes, copiaVoos[i].datap.ano, 
+                copiaVoos[i].horap.horas, 
+                copiaVoos[i].horap.minutos);
+            }
+        }
+    }
 }
 
 
 void c()
 {
-    Hora horaNova;
-    Data dataNova;
     int i, flag = 1;
     char id[4];
+    Voo copiaVoos[40];
+
+    for (i = 0; i < n_voos; i++)
+        copiaVoos[i] = voos[i];
 
     scanf("%s", id);
-    sortVoo();
 
-    for (i = 0; i < n_voos; i++) {
-        if (!strcmp(voos[i].idc, id)) {
+    for (i = 0; i < n_aero; i++) {
+        if (!strcmp(aps[i].id, id))
             flag = 0;
-
-            if (dataChegada(voos[i].horap, voos[i].duracao))
-                dataNova = somaDia(voos[i].datap);
-
-            horaNova = horaChegada(voos[i].horap, voos[i].duracao);
-
-            printf("%s %s %02d-%02d-%04d %02d:%02d\n", voos[i].codigo, \
-            voos[i].idc, dataNova.dia, dataNova.mes, dataNova.ano, \
-            horaNova.minutos, horaNova.horas);
-        }
     }
 
     if (flag)
         printf("%s: no such airport ID\n", id);
+    else {
+        for (i = 0; i < n_voos; i++) {
+            if (passaDia(copiaVoos[i].horap, copiaVoos[i].duracao))
+                copiaVoos[i].datap = somaDia(copiaVoos[i].datap);
+            else
+                copiaVoos[i].datap = copiaVoos[i].datap;
+
+            copiaVoos[i].horap = horaChegada(voos[i].horap, voos[i].duracao);
+        }
+
+        sortVoo(copiaVoos);
+
+        for (i = 0; i < n_voos; i++) {
+            if (!strcmp(copiaVoos[i].idc, id)) {
+                printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
+                copiaVoos[i].idp, copiaVoos[i].datap.dia, copiaVoos[i].datap.mes, 
+                copiaVoos[i].datap.ano, copiaVoos[i].horap.horas, 
+                copiaVoos[i].horap.minutos);
+            }
+        }
+    }
 }
 
 
