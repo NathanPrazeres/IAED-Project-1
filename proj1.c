@@ -87,7 +87,7 @@ void sortVooData(Voo v[])
 {
     Voo temp;
     int i, j, flag;
-    for (i = 0; i < n_voos ; i++) {
+    for (i = 0; i < n_voos; i++) {
         flag = 1;
         for (j = 0; j < n_voos - 1; j++) {
             if (v[j].datap.ano > v[j + 1].datap.ano || \
@@ -328,7 +328,7 @@ void printVoo(Voo voo)
 
 void v()
 {
-    int i, j, flag = 0, temp_flag;
+    int i, flag = 0, temp_flag;
     char c = getchar();
     Voo voo;
 
@@ -377,6 +377,11 @@ void v()
         if (flag == 0) {
             voos[n_voos] = voo;
             n_voos++;
+
+            for (i = 0; i < n_aero; i++) {
+                if (!strcmp(voo.idp, aps[i].id))
+                    aps[i].voos++;
+            }
         }
         else if (flag == 1)
             printf("invalid flight code\n");
@@ -394,13 +399,8 @@ void v()
             printf("invalid capacity\n");
     }
     else 
-        for (i = 0; i < n_voos; i++) {
+        for (i = 0; i < n_voos; i++)
             printVoo(voos[i]);
-            for (j = 0; j < n_aero; j++) {
-                if (!strcmp(voos[i].idc, aps[j].id))
-                    aps[j].voos++;
-            }
-        }
 }
 
 
@@ -431,10 +431,9 @@ void p()
 
     scanf("%s", id);
 
-    for (i = 0; i < n_aero; i++) {
+    for (i = 0; i < n_aero; i++)
         if (!strcmp(aps[i].id, id))
             flag = 0;
-    }
 
     if (flag)
         printf("%s: no such airport ID\n", id);
@@ -487,8 +486,8 @@ void c()
         for (i = 0; i < n_voos; i++) {
             if (!strcmp(copiaVoos[i].idc, id)) {
                 printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
-                copiaVoos[i].idp, copiaVoos[i].datap.dia, copiaVoos[i].datap.mes, 
-                copiaVoos[i].datap.ano, copiaVoos[i].horap.horas, 
+                copiaVoos[i].idp, copiaVoos[i].datap.dia, copiaVoos[i].datap.
+                mes, copiaVoos[i].datap.ano, copiaVoos[i].horap.horas, 
                 copiaVoos[i].horap.minutos);
             }
         }
