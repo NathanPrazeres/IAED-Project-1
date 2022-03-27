@@ -249,20 +249,15 @@ void a()
 {
     AP aeroporto;
     int i, flag = 1;
+    scanf("%s %s %[^\n]", aeroporto.id, aeroporto.pais, aeroporto.cidade);
+    aeroporto.voos = 0;
  
-    if (n_aero >= 40)
-        printf("too many airports\n");
-    else {
-        scanf("%s %s %[^\n]", aeroporto.id, aeroporto.pais, aeroporto.cidade);
-        aeroporto.voos = 0;
-
+    if (n_aero < 40) {
         if (isupper(aeroporto.id[0]) && isupper(aeroporto.id[1]) && \
         isupper(aeroporto.id[2])) {
-
             for (i = 0; i < n_aero; i++)
-                if (strcmp(aps[i].id, aeroporto.id) == 0)
+                if (!strcmp(aps[i].id, aeroporto.id))
                     flag = 0;
-                    
             if (flag) {
                 printf("airport %s\n", aeroporto.id);
                 aps[n_aero] = aeroporto;
@@ -274,6 +269,8 @@ void a()
         else
             printf("invalid airport ID\n");
     }
+    else
+        printf("too many airports\n");
 }
 
 
@@ -331,7 +328,7 @@ void printVoo(Voo voo)
 
 void v()
 {
-    int i, flag = 0, temp_flag;
+    int i, j, flag = 0, temp_flag;
     char c = getchar();
     Voo voo;
 
@@ -355,24 +352,24 @@ void v()
         temp_flag = flag;
         flag = 4;
         for (i = 0; i < n_aero; i++)
-            if (strcmp(voo.idc, aps[i].id) == 0)
+            if (!strcmp(voo.idc, aps[i].id))
                 flag = temp_flag;
         
         temp_flag = flag;
         flag = 3;
         for (i = 0; i < n_aero; i++)
-            if (strcmp(voo.idp, aps[i].id) == 0)
+            if (!strcmp(voo.idp, aps[i].id))
                 flag = temp_flag;
 
         for (i = 0; i < n_voos; i++)
-            if (strcmp(voos[i].codigo, voo.codigo) == 0 && \
+            if (!strcmp(voos[i].codigo, voo.codigo) && 
             comparaDatas(voos[i].datap, voo.datap))
                 flag = 2;
         
         for (i = 2; i < (int) strlen(voo.codigo); i++)
             if(!isdigit(voo.codigo[i]))
                 flag = 1;
-        if ((voo.codigo[2] == 0 && (int) strlen(voo.codigo) > 2) || \
+        if ((int) strlen(voo.codigo) <= 2 || voo.codigo[2] == '0' || \
         !isupper(voo.codigo[0]) || !isupper(voo.codigo[1]))
             flag = 1;
 
@@ -397,8 +394,13 @@ void v()
             printf("invalid capacity\n");
     }
     else 
-        for (i = 0; i < n_voos; i++)
+        for (i = 0; i < n_voos; i++) {
             printVoo(voos[i]);
+            for (j = 0; j < n_aero; j++) {
+                if (!strcmp(voos[i].idc, aps[j].id))
+                    aps[j].voos++;
+            }
+        }
 }
 
 
