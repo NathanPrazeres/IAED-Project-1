@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 
-int n_aero=0, n_voos=0;
+int n_aero = 0, n_voos = 0;
 
 typedef struct {
     int dia;
@@ -39,15 +39,15 @@ typedef struct {
 
 Voo voos[30000];
 
-
-
 void sortAP()
 {
     AP temp;
     int i, j, flag;
-    for (i = 0; i < n_aero; i++) {
+
+    for (i = 0; i < n_aero - 1; i++) {
         flag = 1;
-        for (j = 0; j < n_aero - 1; j++) {
+
+        for (j = 0; j < n_aero - i - 1; j++) {
             if (strcmp(aps[j].id, aps[j + 1].id) > 0) {
                 flag = 0;
                 temp = aps[j];
@@ -61,15 +61,17 @@ void sortAP()
 }
 
 
-void sortVooHora(Voo v[])
+void sortVooHora(Voo v[], int max)
 {
     Voo temp;
     int i, j, flag;
-    for (i = 0; i < n_voos; i++) {
+
+    for (i = 0; i < max - 1; i++) {
         flag = 1;
-        for (j = 0; j < n_voos - 1; j++) {
-            if (v[j].horap.horas > v[j + 1].horap.horas || \
-            (v[j].horap.horas == v[j + 1].horap.horas && \
+
+        for (j = 0; j < max - i - 1; j++) {
+            if (v[j].horap.horas > v[j + 1].horap.horas ||
+            (v[j].horap.horas == v[j + 1].horap.horas && 
             v[j].horap.minutos > v[j + 1].horap.minutos)) {
                 flag = 0;
                 temp = v[j];
@@ -83,18 +85,20 @@ void sortVooHora(Voo v[])
 }
 
 
-void sortVooData(Voo v[])
+void sortVooData(Voo v[], int max)
 {
     Voo temp;
     int i, j, flag;
-    for (i = 0; i < n_voos; i++) {
+
+    for (i = 0; i < max - 1; i++) {
         flag = 1;
-        for (j = 0; j < n_voos - 1; j++) {
-            if (v[j].datap.ano > v[j + 1].datap.ano || \
-            (v[j].datap.ano == v[j + 1].datap.ano && \
-            v[j].datap.mes > v[j + 1].datap.mes) || \
-            (v[j].datap.ano == v[j + 1].datap.ano && \
-            v[j].datap.mes == v[j + 1].datap.mes && \
+
+        for (j = 0; j < max - i - 1; j++) {
+            if (v[j].datap.ano > v[j + 1].datap.ano || 
+            (v[j].datap.ano == v[j + 1].datap.ano && 
+            v[j].datap.mes > v[j + 1].datap.mes) || 
+            (v[j].datap.ano == v[j + 1].datap.ano && 
+            v[j].datap.mes == v[j + 1].datap.mes && 
             v[j].datap.dia > v[j + 1].datap.dia)) {
                 flag = 0;
                 temp = v[j];
@@ -108,17 +112,17 @@ void sortVooData(Voo v[])
 }
 
 
-void sortVoo(Voo v[])
+void sortVoo(Voo v[], int max)
 {
-    sortVooHora(v);
-    sortVooData(v);
+    sortVooHora(v, max);
+    sortVooData(v, max);
 }
 
 
 
 int comparaDatas(Data d1, Data d2)
 {
-    return (d1.dia == d2.dia && d1.mes == d2.mes && d1.ano == d2.ano)? 1:0;
+    return (d1.dia == d2.dia && d1.mes == d2.mes && d1.ano == d2.ano);
 }
 
 int testeMes(int dia, int mes, int flag)
@@ -161,7 +165,7 @@ int testeData(int dia, int mes, int ano)
             flag = 0;
     }
 
-    if (ano < data.ano || (mes < data.mes && ano == data.ano) || \
+    if (ano < data.ano || (mes < data.mes && ano == data.ano) || 
     (dia < data.dia && mes == data.mes && ano == data.ano) || mes > 12)
         flag = 0;
 
@@ -173,7 +177,7 @@ int testeData(int dia, int mes, int ano)
 
 int passaDia(Hora partida, Hora duracao)
 {
-    int somaMinutos = partida.minutos + duracao.minutos, \
+    int somaMinutos = partida.minutos + duracao.minutos, 
     somaHoras = partida.horas + duracao.horas, day = 0;
 
     if (somaMinutos >= 60) {
@@ -206,11 +210,13 @@ Data somaDia(Data dataPartida)
         dataNova.mes = dataPartida.mes;
         dataNova.ano = dataPartida.ano;
     }
+
     else if (flag == 0) {
         dataNova.dia = 1;
         dataNova.mes = dataPartida.mes + 1;
         dataNova.ano = dataPartida.ano;
     }
+
     else if (flag == 2) {
         dataNova.dia = 1;
         dataNova.mes = 1;
@@ -225,7 +231,7 @@ Data somaDia(Data dataPartida)
 Hora horaChegada(Hora partida, Hora duracao)
 {
     Hora chegada;
-    int somaMinutos = partida.minutos + duracao.minutos, \
+    int somaMinutos = partida.minutos + duracao.minutos, 
     somaHoras = partida.horas + duracao.horas;
 
     if (somaMinutos >= 60) {
@@ -233,9 +239,8 @@ Hora horaChegada(Hora partida, Hora duracao)
         somaHoras += 1;
     }
     
-    if (somaHoras >= 24) {
+    if (somaHoras >= 24)
         somaHoras -= 24;
-    }
 
     chegada.minutos = somaMinutos;
     chegada.horas = somaHoras;
@@ -253,11 +258,13 @@ void a()
     aeroporto.voos = 0;
  
     if (n_aero < 40) {
-        if (isupper(aeroporto.id[0]) && isupper(aeroporto.id[1]) && \
+        if (isupper(aeroporto.id[0]) && isupper(aeroporto.id[1]) && 
         isupper(aeroporto.id[2])) {
+
             for (i = 0; i < n_aero; i++)
                 if (!strcmp(aps[i].id, aeroporto.id))
                     flag = 0;
+
             if (flag) {
                 printf("airport %s\n", aeroporto.id);
                 aps[n_aero] = aeroporto;
@@ -286,9 +293,11 @@ void l()
     char id[4], c = getchar();
 
     sortAP();
+
     while (c != '\n' && c != '\0') {
         flag = err = 0;
         scanf("%s", id);
+
         for (i = 0; i < n_aero; i++) {
             if (!strcmp(aps[i].id, id)) {
                 printAP(aps[i]);
@@ -297,6 +306,7 @@ void l()
         }
         if (!err)
             printf("%s: no such airport ID\n", id);
+
         c = getchar();
     }
     if (flag)
@@ -308,10 +318,10 @@ void l()
 Voo leVoo()
 {
     Voo voo;
-    scanf("%s%s%s%d-%d-%d%d:%d%d:%d%d", voo.codigo, voo.idp, voo.idc, \
-            &voo.datap.dia, &voo.datap.mes, &voo.datap.ano, &voo.horap.horas, \
-            &voo.horap.minutos, &voo.duracao.horas, &voo.duracao.minutos, \
-            &voo.capacidade);
+    scanf("%s %s %s %d-%d-%d %d:%d %d:%d %d", voo.codigo, voo.idp, voo.idc, 
+        &voo.datap.dia, &voo.datap.mes, &voo.datap.ano, &voo.horap.horas, 
+        &voo.horap.minutos, &voo.duracao.horas, &voo.duracao.minutos, 
+        &voo.capacidade);
     return voo;
 }
 
@@ -319,8 +329,8 @@ Voo leVoo()
 
 void printVoo(Voo voo) 
 {
-    printf("%s %s %s %02d-%02d-%04d %d:%d\n", voo.codigo, voo.idp, \
-    voo.idc, voo.datap.dia, voo.datap.mes, voo.datap.ano, voo.horap.horas, \
+    printf("%s %s %s %02d-%02d-%04d %02d:%02d\n", voo.codigo, voo.idp, 
+    voo.idc, voo.datap.dia, voo.datap.mes, voo.datap.ano, voo.horap.horas, 
     voo.horap.minutos);
 }
 
@@ -369,34 +379,45 @@ void v()
         for (i = 2; i < (int) strlen(voo.codigo); i++)
             if(!isdigit(voo.codigo[i]))
                 flag = 1;
+        
         if ((int) strlen(voo.codigo) <= 2 || voo.codigo[2] == '0' || \
         !isupper(voo.codigo[0]) || !isupper(voo.codigo[1]))
             flag = 1;
 
+        switch (flag) {
+            case 0:
+                voos[n_voos] = voo;
+                n_voos++;
 
-        if (flag == 0) {
-            voos[n_voos] = voo;
-            n_voos++;
-
-            for (i = 0; i < n_aero; i++) {
-                if (!strcmp(voo.idp, aps[i].id))
-                    aps[i].voos++;
-            }
+                for (i = 0; i < n_aero; i++)
+                    if (!strcmp(voo.idp, aps[i].id))
+                        aps[i].voos++;
+                break;
+            case 1:
+                printf("invalid flight code\n");
+                break;
+            case 2:
+                printf("flight already exists\n");
+                break;
+            case 3:
+                printf("%s: no such airport ID\n", voo.idp);
+                break;
+            case 4:
+                printf("%s: no such airport ID\n", voo.idc);
+                break;
+            case 5:
+                printf("too many flights\n");
+                break;
+            case 6:
+                printf("invalid date\n");
+                break;
+            case 7:
+                printf("invalid duration\n");
+                break;
+            case 8:
+                printf("invalid capacity\n");
+                break;
         }
-        else if (flag == 1)
-            printf("invalid flight code\n");
-        else if (flag == 2)
-            printf("flight already exists\n");
-        else if (flag == 3 || flag == 4)
-            printf("%s: no such airport ID\n", flag == 3? voo.idp:voo.idc);
-        else if (flag == 5)
-            printf("too many flights\n");
-        else if (flag == 6)
-            printf("invalid date\n");
-        else if (flag == 7)
-            printf("invalid duration\n");
-        else if (flag == 8)
-            printf("invalid capacity\n");
     }
     else 
         for (i = 0; i < n_voos; i++)
@@ -404,8 +425,77 @@ void v()
 }
 
 
+void p()
+{
+    int i, flag = 1, max = 0;
+    char id[4];
+    Voo copiaVoos[30000];
+
+    scanf("%s", id);
+
+    for (i = 0; i < n_voos; i++)
+        if (!strcmp(voos[i].idp, id)) {
+            copiaVoos[max] = voos[i];
+            max++;
+        }
+
+    for (i = 0; i < n_aero; i++)
+        if (!strcmp(aps[i].id, id))
+            flag = 0;
+
+    if (flag)
+        printf("%s: no such airport ID\n", id);
+    else {
+        sortVoo(copiaVoos, max);
+
+        for (i = 0; i < max; i++) {
+            printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
+            copiaVoos[i].idc, copiaVoos[i].datap.dia, 
+            copiaVoos[i].datap.mes, copiaVoos[i].datap.ano, 
+            copiaVoos[i].horap.horas, 
+            copiaVoos[i].horap.minutos);
+        }
+    }
+}
 
 
+void c()
+{
+    int i, flag = 1, max = 0;
+    char id[4];
+    Voo copiaVoos[30000];
+
+    scanf("%s", id);
+
+    for (i = 0; i < n_voos; i++)
+        if (!strcmp(voos[i].idc, id)) {
+            copiaVoos[max] = voos[i];
+
+            if (passaDia(copiaVoos[max].horap, copiaVoos[max].duracao))
+                copiaVoos[max].datap = somaDia(copiaVoos[max].datap);
+
+            copiaVoos[max].horap = horaChegada(voos[i].horap, voos[i].duracao);
+
+            max++;
+        }
+
+    for (i = 0; i < n_aero; i++) 
+        if (!strcmp(aps[i].id, id))
+            flag = 0;
+
+    if (flag)
+        printf("%s: no such airport ID\n", id);
+    else {
+        sortVoo(copiaVoos, max);
+
+        for (i = 0; i < max; i++) {
+            printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
+            copiaVoos[i].idp, copiaVoos[i].datap.dia, copiaVoos[i].datap.
+            mes, copiaVoos[i].datap.ano, copiaVoos[i].horap.horas, 
+            copiaVoos[i].horap.minutos);
+        }
+    }
+}
 
 
 void t()
@@ -417,81 +507,6 @@ void t()
         printf("%02d-%02d-%04d\n", data.dia=dia, data.mes=mes, data.ano=ano);
     else
         printf("invalid date\n");
-}
-
-
-void p()
-{
-    int i, flag = 1;
-    char id[4];
-    Voo copiaVoos[40];
-
-    for (i = 0; i < n_voos; i++)
-        copiaVoos[i] = voos[i];
-
-    scanf("%s", id);
-
-    for (i = 0; i < n_aero; i++)
-        if (!strcmp(aps[i].id, id))
-            flag = 0;
-
-    if (flag)
-        printf("%s: no such airport ID\n", id);
-    else {
-        sortVoo(copiaVoos);
-
-        for (i = 0; i < n_voos; i++) {
-            if (!strcmp(copiaVoos[i].idp, id)) {
-                printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
-                copiaVoos[i].idc, copiaVoos[i].datap.dia, 
-                copiaVoos[i].datap.mes, copiaVoos[i].datap.ano, 
-                copiaVoos[i].horap.horas, 
-                copiaVoos[i].horap.minutos);
-            }
-        }
-    }
-}
-
-
-void c()
-{
-    int i, flag = 1;
-    char id[4];
-    Voo copiaVoos[40];
-
-    for (i = 0; i < n_voos; i++)
-        copiaVoos[i] = voos[i];
-
-    scanf("%s", id);
-
-    for (i = 0; i < n_aero; i++) {
-        if (!strcmp(aps[i].id, id))
-            flag = 0;
-    }
-
-    if (flag)
-        printf("%s: no such airport ID\n", id);
-    else {
-        for (i = 0; i < n_voos; i++) {
-            if (passaDia(copiaVoos[i].horap, copiaVoos[i].duracao))
-                copiaVoos[i].datap = somaDia(copiaVoos[i].datap);
-            else
-                copiaVoos[i].datap = copiaVoos[i].datap;
-
-            copiaVoos[i].horap = horaChegada(voos[i].horap, voos[i].duracao);
-        }
-
-        sortVoo(copiaVoos);
-
-        for (i = 0; i < n_voos; i++) {
-            if (!strcmp(copiaVoos[i].idc, id)) {
-                printf("%s %s %02d-%02d-%04d %02d:%02d\n", copiaVoos[i].codigo, 
-                copiaVoos[i].idp, copiaVoos[i].datap.dia, copiaVoos[i].datap.
-                mes, copiaVoos[i].datap.ano, copiaVoos[i].horap.horas, 
-                copiaVoos[i].horap.minutos);
-            }
-        }
-    }
 }
 
 

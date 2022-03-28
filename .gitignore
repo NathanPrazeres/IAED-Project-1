@@ -5,3 +5,6 @@ proj1
 Proj1/
 *.out
 *.zip
+proj1debug
+*.pdf
+*.Identifier
