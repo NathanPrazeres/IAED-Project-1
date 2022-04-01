@@ -528,7 +528,7 @@ void l()
 */
 void v()
 {
-    int i, flag, temp_flag, lencod;
+    int i, flag;
     char c = getchar();
     Voo voo;
 
