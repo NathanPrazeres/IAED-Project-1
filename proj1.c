@@ -108,6 +108,7 @@ void v()
 
         flag = testeVoo(voo, flag);
 
+        /* raiseError(flag); */
         switch (flag) {
             case 0:
                 voos[n_voos] = voo;
