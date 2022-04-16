@@ -4,18 +4,14 @@ ist1 103145
 1º Projeto de IAED
 */
 
-/*
-    Inclusoes.
-*/
+/* Inclusoes */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
-/*
-    Definicoes.
-*/
+/* Definicoes */
 
 #define MAXAPS 40
 #define MAXVOOS 30000
@@ -24,9 +20,7 @@ ist1 103145
 #define MAXCIDADE 51
 #define MAXCODIGO 7
 
-/*
-    Estruturas e tipos de dados.
-*/
+/* Estruturas e tipos de dados */
 
 typedef struct {
     int dia;
@@ -57,9 +51,7 @@ typedef struct {
 } Voo;
 
 
-/*
-    Inicializacao de variaveis globais.
-*/
+/* Inicializacao de variaveis globais */
 
 int n_aero = 0, n_voos = 0;
 Data data = {1, 1, 2022};
@@ -67,9 +59,7 @@ AP aps[MAXAPS];
 Voo voos[MAXVOOS];
 
 
-/*
-    Funcoes auxiliares.
-*/
+/* Funcoes auxiliares */
 
 /* SORT AEROPORTOS
     Funcao que ordena os aeroportos por ordem alfabetica de identificador.
@@ -428,7 +418,7 @@ void printAP(AP a)
 
 
 
-/* ADICIONA AEROPORTO
+/* ADICIONAR AEROPORTO
     Esta funcao adiciona um aeroporto ao sistema.
 
     Quando recebe uma string contendo um id, pais e cidade de um aeroporto que
@@ -440,7 +430,7 @@ void printAP(AP a)
         -> Quando o aeroporto excede o limite de aeroportos do sistema.
         -> Quando o aeroporto ja existe.
 */
-void a()
+void criaAeroporto()
 {
     AP aeroporto;
     int i, flag = 1;
@@ -470,7 +460,7 @@ void a()
         printf("too many airports\n");
 }
 
-/* LISTA AEROPORTOS
+/* LISTAR AEROPORTOS
     Esta funcao lista todos os aeroportos do sistema.
 
     Se nao forem introduzidos argumentos, imprime todos os aeroportos do 
@@ -483,7 +473,7 @@ void a()
     Erros:
         -> Quando o id de um aeroporto introduzido nao existe.
 */
-void l()
+void lista()
 {
     int i, flag = 1, err = 1;
     char id[MAXID], c = getchar();
@@ -552,7 +542,7 @@ void v()
     Erros:
         -> Quando o aeroporto nao existe.
 */
-void p()
+void partidas()
 {
     int i, flag = 1, max = 0;
     char id[MAXID];
@@ -595,7 +585,7 @@ void p()
     Erros:
         -> Quando o aeroporto nao existe.
 */
-void c()
+void chegadas()
 {
     int i, flag = 1, max = 0;
     char id[MAXID];
@@ -642,7 +632,7 @@ void c()
         -> Quando a data recebida eh anterior a data atual.
         -> Quando a data recebida eh mais de um ano no futuro.
 */
-void t()
+void tempo()
 {
     int dia, mes, ano, flag;
     scanf("%d-%d-%d", &dia, &mes, &ano);
@@ -665,22 +655,22 @@ int main()
     while ((comando = getchar()) != 'q') {
         switch (comando) {
             case 'a':
-                a();
+                criaAeroporto();
                 break;
             case 'l':
-                l();
+                lista();
                 break;
             case 'v':
                 v();
                 break;
             case 'p':
-                p();
+                partidas();
                 break;
             case 'c':
-                c();
+                chegadas();
                 break;
             case 't':
-                t();
+                tempo();
                 break;
         }
     }
